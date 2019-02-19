@@ -1,0 +1,57 @@
+import * as express from 'express';
+import * as mongoose from 'mongoose';
+import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
+import * as logger from 'morgan';
+import * as helmet from 'helmet';
+import * as cors from 'cors';
+
+import router from './router/v1';
+import config from './config/main';
+
+
+// init express
+const app = express ();
+
+// init mongoose
+// mongoose.connect(config.db);
+const db = mongoose.connect('mongodb://localhost:27017/blog-demo-tutorial',{
+  useNewUrlParser: true,
+  // https://mongoosejs.com/docs/deprecations.html
+  useFindAndModify: false,
+  useCreateIndex: true
+}).then(() => {
+  console.log("Connected to Database");
+  }).catch((err) => {
+      console.log("Not Connected to Database ERROR! ", err);
+  });;
+
+// express middleware
+ app.use(bodyParser.urlencoded({extended:false}))
+ app.use(bodyParser.json())
+ app.use(cookieParser());
+ app.use(logger('dev'));
+ app.use(helmet());
+ app.use(cors());
+
+ //router
+ router(app);
+
+ //init server
+  let server;
+
+  if(process.env.NODE_ENV !== config.test_env){
+    server= app.listen(config.port, () =>{
+      console.log(`server running on port ${config.port}`);
+    });
+  }else {
+
+    server = app.listen(config.test_port, () =>{
+      console.log(`Server running on port ${config.test_port}`);
+
+    })
+  }
+
+  export default server;
+
+  

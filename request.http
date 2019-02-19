@@ -1,0 +1,17 @@
+GET http://localhost:3000/api/posts HTTP/1.1
+###
+POST http://localhost:3000/api/posts HTTP/1.1
+content-type: application/json
+
+{
+    "title": " post",
+    "content": " post content"
+}
+###
+PUT   http://localhost:3000/api/posts/5c663735ead82411d865b34f
+
+content-type: application/json
+{
+    "title":"UPDATE",
+    "content":"avgnh"
+}
